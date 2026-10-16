@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Attendance Portal Administrator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <svg viewBox="0 0 72 72" aria-hidden="true">
+        <circle cx="36" cy="36" r="34" fill="none" stroke="#10b981" stroke-width="3"/>
+        <path d="M36 12 54 19v15c0 11-8 19-18 24-10-5-18-13-18-24V19z" fill="#10b981"/>
+        <path d="M27 35l7 7 12-14" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Attendance Portal</span>
+    </div>
+    <nav id="nav" aria-label="Main"></nav>
+    <a class="out" href="login.html">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span>Sign out</span>
+    </a>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <h1 id="ttl"></h1>
+      <span class="who"><span id="dt0"></span> · <span id="who_name">Administrator</span></span>
+    </header>
+    <div id="view"></div>
+  </main>
+</div>
+
+<dialog id="dlg" aria-labelledby="dt">
+  <div class="dh"><h2 id="dt"></h2><button type="button" class="x" data-x aria-label="Close">&times;</button></div>
+  <form id="df" class="db" novalidate></form>
+</dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

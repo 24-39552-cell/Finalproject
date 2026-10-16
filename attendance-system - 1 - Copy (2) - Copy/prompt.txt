@@ -1,0 +1,299 @@
+<USER_REQUEST>
+# IMPLEMENT A FULLY FUNCTIONAL BACKEND AND DATABASE BASED ON THE SYSTEM REQUIREMENTS
+
+Transform the existing website for the **IoT-Based Automated Attendance Monitoring System Using Facial Recognition and Fingerprint with Web-Based Reporting** from a frontend prototype into a fully functional, database-driven application.
+
+Use the provided Functional and Non-Functional Requirements document as the primary reference. Follow its specified features, workflows, security requirements, and access restrictions. Do not invent additional user roles or features that conflict with the document.
+
+## 1. Remove All Sample and Dummy Data
+
+Completely remove all sample, hardcoded, mock, and placeholder data from the existing website, including:
+
+- Sample students, teachers, and user accounts
+- Fake attendance records and attendance history
+- Hardcoded dashboard statistics and charts
+- Sample activity logs
+- Placeholder biometric registration statuses
+- Mock device status and simulated attendance transactions
+- Fake report data
+
+Keep the existing professional UI design, navigation, page structure, and styling.
+
+When the database contains no records, display appropriate empty states, such as "No students registered yet" or "No attendance records found." Do not display fabricated information or fake success messages.
+
+## 2. Inspect the Existing Project Before Implementation
+
+Before changing any code:
+
+1. Inspect the existing frontend, project structure, framework, dependencies, and available backend.
+2. Identify all pages, forms, tables, dashboard cards, charts, and buttons that currently use sample data.
+3. Identify existing API endpoints and database connections, if any.
+4. Select a backend and database compatible with the existing project.
+5. Preserve the current UI and all working features while replacing mock data sources with actual backend operations.
+
+Do not unnecessarily rebuild the website or change its design.
+
+## 3. Implement the Backend and Centralized Database
+
+Create a real backend with secure APIs and persistent database storage.
+
+The database must support the following entities:
+
+- Users and authentication credentials
+- Administrator and Teacher roles
+- Students and student profiles
+- Grade levels, sections, and school years
+- Teacher-to-class assignments
+- Student-to-class assignments
+- Facial biometric registration references or templates
+- Fingerprint registration references or sensor template IDs
+- Attendance records and attendance statuses
+- Attendance schedules and late thresholds
+- IoT devices and their connectivity status
+- User activity logs and biometric audit trails
+- System settings
+
+Create appropriate primary keys, foreign keys, relationships, indexes, validation rules, and database constraints.
+
+Use database migrations or initialization scripts so the database can be created reliably. Store configuration and credentials in environment variables. Use parameterized queries or a secure ORM.
+
+All saved records must persist after refreshing the page, logging out, or restarting the application.
+
+## 4. Implement Exactly Two Web-System Roles
+
+The system must have only these two user roles:
+
+**Administrator**
+- Manage Administrator and Teacher accounts as permitted by the system's account-management rules.
+- Create, update, activate, and deactivate Teacher accounts.
+- Assign Teachers to specific grade levels and sections.
+- Manage all student records and class assignments.
+- Register and update student facial and fingerprint data.
+- View, search, filter, and correct attendance records.
+- Manage attendance schedules and late thresholds.
+- Generate and export attendance reports to Excel.
+- Monitor IoT device status.
+- View activity logs and system-wide dashboard statistics.
+
+**Teacher**
+- Access only assigned classes and students.
+- Register and update permitted student information.
+- Register and update facial and fingerprint data for assigned students.
+- View and monitor attendance records for assigned students.
+- Search and filter attendance records.
+- Manually assign or correct Absent and Excused statuses according to system rules.
+- Generate daily, weekly, monthly, individual-student, and class attendance reports for assigned classes.
+
+Students must not have accounts, login access, dashboards, or access to the web-based system. Students interact physically with the IoT device during biometric registration and attendance verification.
+
+Enforce authorization on the backend for every protected operation. Do not rely only on hiding buttons or restricting frontend navigation.
+
+## 5. Implement Student and Biometric Management
+
+Connect student registration and management forms to the actual database.
+
+The system must support student ID, name, grade level, section, school year, student status, and class assignment.
+
+For facial registration:
+
+1. An authorized Administrator or Teacher selects a student.
+2. The camera is activated through the supported hardware workflow.
+3. The system captures and validates the student's face.
+4. The resulting biometric representation or reference is securely associated with the student.
+5. The system records the registration result and displays accurate feedback.
+
+For fingerprint registration:
+
+1. An authorized user selects a student.
+2. The system initiates the supported R307 fingerprint enrollment workflow.
+3. The student places their finger on the sensor.
+4. The sensor captures and enrolls the fingerprint template.
+5. The system verifies successful enrollment and stores the appropriate reference or template ID.
+
+Prevent duplicate student IDs and duplicate fingerprint enrollment where supported by the hardware.
+
+Teachers must not register, update, or access biometric information for students outside their assigned classes.
+
+Never display raw fingerprint templates or expose sensitive biometric data through ordinary API responses. Clearly distinguish biometric enrollment status from actual successful biometric verification.
+
+## 6. Implement the IoT Attendance Workflow
+
+Prepare the backend for integration with the ESP32, OV2640 camera module, and R307 fingerprint sensor.
+
+The intended workflow is:
+
+1. The device initializes the camera, fingerprint sensor, and network connection.
+2. The device attempts facial recognition as the primary identification method.
+3. If facial recognition fails or is unavailable, the student may proceed to fingerprint verification.
+4. The system validates the identified student and checks their active enrollment and attendance eligibility.
+5. The backend checks the applicable attendance period and existing records.
+6. The system determines Present or Late based on configured attendance schedules and late thresholds.
+7. If identification and validation succeed, the attendance transaction is saved to the centralized database.
+8. The device provides the appropriate attendance confirmation.
+9. The web dashboard displays the saved attendance record after successful synchronization.
+
+If both identification methods fail, do not create an attendance record.
+
+Record the verification method as either Facial Recognition or Fingerprint.
+
+Associate each attendance transaction with its device and timestamp when available. Authenticate IoT devices and validate incoming requests to prevent unauthorized attendance submissions.
+
+Do not assume that the OV2640 camera or ESP32 automatically supports full facial recognition. Implement the recognition process using a technically compatible processing architecture. If additional processing hardware or software is required, identify it clearly.
+
+Do not simulate successful hardware operations. If the physical device is not yet available, implement and test the backend endpoints separately and clearly label hardware-dependent features as pending integration.
+
+## 7. Implement Attendance Management and Duplicate Prevention
+
+All attendance data must come from the database.
+
+Each attendance record should include:
+
+- Attendance ID
+- Student ID
+- Date and time
+- Attendance status
+- Verification method
+- IoT device identifier, where applicable
+- Relevant attendance period
+
+Implement the following rules:
+
+- Automatically record attendance only after successful biometric identification and validation.
+- Prevent duplicate attendance for the same student during the same configured attendance period.
+- Use backend validation and database constraints to prevent duplicate submissions.
+- Determine Present or Late using configured schedules and thresholds.
+- Allow authorized Teachers to manually assign Absent or Excused statuses.
+- Allow authorized users to correct records within their permissions.
+- Record attendance changes in the activity log.
+- Prevent Teachers from modifying attendance records outside their assigned classes.
+
+Do not automatically mark students Absent unless the appropriate attendance period has ended and the applicable attendance rules support the decision.
+
+## 8. Connect Every Dashboard Component to Real Data
+
+Remove hardcoded statistics and connect the Administrator dashboard to actual database queries for:
+
+- Total registered students
+- Total Teachers
+- Present, Late, and Absent counts
+- Recent attendance records
+- Biometric enrollment status
+- Device connectivity status
+- Attendance trends and summaries
+- Recent activity logs
+
+The Teacher dashboard must display only data from the Teacher's assigned classes.
+
+Update dashboard information when new attendance transactions are successfully saved. Use appropriate polling or real-time communication where supported.
+
+Device status must be based on actual device communication or heartbeat information, not a permanently hardcoded Online status.
+
+## 9. Implement Reports and Excel Export
+
+Connect all report pages to real attendance records.
+
+Implement the following report types:
+
+- Daily attendance report
+- Weekly attendance report
+- Monthly attendance report
+- Individual student attendance report
+- Class attendance report
+
+Provide date filters, grade-level and section filters, student filters, and attendance-status filters where applicable.
+
+Implement actual Excel file generation and downloading. The exported files must contain the correct database results and respect the logged-in user's permissions.
+
+Administrators may generate system-wide reports. Teachers may generate reports only for their assigned students and classes.
+
+Do not generate reports using sample arrays, hardcoded values, or frontend-only calculations based on fake records.
+
+## 10. Implement Activity Logs and Audit Trails
+
+Create persistent audit logs for important system actions, including:
+
+- Successful and failed login attempts
+- Logout
+- Account creation and updates
+- Account activation and deactivation
+- Role assignments and password resets
+- Student creation and modification
+- Class assignment changes
+- Facial biometric registration and updates
+- Fingerprint registration and updates
+- Failed biometric enrollment
+- Attendance recording and correction
+- Attendance status changes
+- Report generation and export
+- IoT device events where applicable
+
+Each log should include the acting user or device, action, affected record, timestamp, and operation result when applicable.
+
+Activity logs must be protected from unauthorized modification or deletion. Teachers must not be able to modify or delete audit logs.
+
+Never store passwords, session tokens, or unnecessary raw biometric data in activity logs.
+
+## 11. Apply Security and Non-Functional Requirements
+
+Implement the security and quality requirements in the provided document, including:
+
+- Secure password hashing
+- Secure session management and logout
+- Server-side role-based authorization
+- Input validation and error handling
+- Protection against SQL injection
+- Secure IoT device authentication
+- Biometric data protection
+- Database integrity and duplicate prevention
+- Reliable handling of network and hardware errors
+- Appropriate access restrictions for Teachers
+- Audit log protection
+- Maintainable and scalable backend architecture
+
+Return understandable error messages without exposing sensitive server or database information.
+
+## 12. Testing and Final Deliverables
+
+After implementation, verify that:
+
+- No sample or dummy data remains in the application.
+- All forms save and retrieve actual database records.
+- Dashboard statistics match the database.
+- Student registration and updates persist correctly.
+- Administrator and Teacher permissions work correctly.
+- Teachers cannot access other Teachers' students by changing URLs or API requests.
+- Duplicate attendance submissions are rejected.
+- Attendance reports contain accurate database results.
+- Excel downloads work correctly.
+- Activity logs are saved and protected.
+- API and database errors are handled appropriately.
+- The application can be configured and run using documented setup instructions.
+
+Provide the database schema or migrations, environment variable example, installation instructions, API documentation, and test results.
+
+### Final Instructions
+
+Work directly with the existing codebase. Implement actual backend logic and database integration rather than simply modifying the appearance of the frontend.
+
+Use the provided requirements as the source of truth. Preserve the current professional UI design, existing navigation, and working frontend features.
+
+Do not claim a feature is complete unless it has been implemented and tested. Clearly identify any remaining hardware integration, deployment, or configuration requirements.
+
+**The final result must be a functional, persistent, secure, database-driven attendance monitoring system that follows the specified Functional and Non-Functional Requirements.**
+
+use this link for the database used XAMPP.
+
+http://localhost/phpmyadmin/index.php?route=/database/structure&db=student+attendance
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-16T20:22:11+08:00.
+
+The user's current state is as follows:
+Active Document: c:\attendance-system - 1 - Copy (2) - Copy\admin.html (LANGUAGE_HTML)
+Cursor is on line: 1
+Other open documents:
+- c:\attendance-system - 1 - Copy (2) - Copy\admin.html (LANGUAGE_HTML)
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Claude Sonnet 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
